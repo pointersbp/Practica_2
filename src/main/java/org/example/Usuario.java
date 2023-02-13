@@ -1,20 +1,26 @@
 package org.example;
 
 public class Usuario {
-    private String usurio;
+    private String usuario;
     private String nombre;
     private String password;
-    public Usuario(String usurio, String nombre, String password) {
-        this.usurio = usurio;
+
+    public Usuario() {
+        this.usuario = "";
+        this.password = "";
+    }
+
+    public Usuario(String usuario, String nombre, String password) {
+        this.usuario = usuario;
         this.nombre = nombre;
         this.password = password;
     }
     public String getUsurio() {
-        return usurio;
+        return usuario;
     }
 
     public void setUsurio(String usurio) {
-        this.usurio = usurio;
+        this.usuario = usurio;
     }
 
     public String getNombre() {
