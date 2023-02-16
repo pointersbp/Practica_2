@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarroCompra {
-    private int id;
+    private long id;
     public ArrayList<Producto> productos;
-    public CarroCompra(int id) {
+    public CarroCompra(long id) {
 
         this.id = id;
         this.productos = new ArrayList();
     }
-    public int getId() {
+    public long getId() {
         return id;
     }
-    public void setId(int id) {
-        this.id = id;
-    }
+   // public void setId(int id) {this.id = id;}
 
     public ArrayList<Producto> getProductos() {
         return this.productos;
@@ -26,26 +24,24 @@ public class CarroCompra {
         this.productos.add(nuevo);
     }
 
-    /*
+
     public Producto getProductosPorID(int id) {
-        return (Producto)this.productos.stream().filter((e) -> {
-            return e.getId() == id;
-        }).findFirst().orElse((Object)null);
+        return productos.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
     }
 
-     */
 
     public void cambiarProducto(Producto temp, int pos) {
         this.productos.set(pos, temp);
     }
 
     public int getPos(Integer id) {
-        for(int cont = 0; cont < this.productos.size(); ++cont) {
-            if (((Producto)this.productos.get(cont)).getId() == id) {
+        int cont = 0;
+        while(cont < productos.size()){
+            if(productos.get(cont).getId() == id){
                 return cont;
             }
+            cont++;
         }
-
         return -1;
     }
 

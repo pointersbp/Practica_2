@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Iterator;
 
 public class VentasProductos {
-    private int id;
+    private long id;
     private String nombreCliente;
     private ArrayList<Producto> listaProductos;
     Date fechaCompra = new Date();
@@ -16,16 +16,18 @@ public class VentasProductos {
         this.nombreCliente = nombre;
         this.listaProductos = productos;
     }
-    public VentasProductos() {
+    public VentasProductos(long id, String nombreCliente, ArrayList<Producto> productos) {
+        this.id = id;
+        this.fechaCompra = new Date();
+        this.nombreCliente = nombreCliente;
+        this.listaProductos = productos;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+   // public void setId(int id) {this.id = id;}
 
     public ArrayList<Producto> getListaProductos() {
         return this.listaProductos;
@@ -46,18 +48,15 @@ public class VentasProductos {
         return date;
     }
 
-    /*
-    public Integer getTotal() {
-        Integer total = 0;
 
-        Producto producto;
-        for(Iterator var2 = this.listaProductos.iterator(); var2.hasNext(); total = total + producto.getPrecio() * producto.getCantidad()) {
-            producto = (Producto)var2.next();
+        public Integer getTotal(){
+            Integer total = 0;
+            for (Producto producto : listaProductos) {
+                total += producto.getPrecio()*producto.getCantidad();
+            }
+            return total;
         }
 
-        return total;
-    }
 
-    */
 
 }

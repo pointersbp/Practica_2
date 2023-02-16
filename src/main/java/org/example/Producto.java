@@ -1,17 +1,14 @@
 package org.example;
 
+import java.math.BigDecimal;
+
 public class Producto {
     private int id;
     private String nombre;
-    private float precio;
+    private int precio;
     private int cantidad;
-    public Producto() {
-        this.id = 0;
-        this.nombre = "";
-        this.precio = 0;
-    }
-    public Producto(int id, String nombre, float precio) {
-        this.id = id;
+
+    public Producto( String nombre, int precio) {
         this.nombre = nombre;
         this.precio = precio;
     }
@@ -30,11 +27,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public float getPrecio() {
+    public int getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(int precio) {
         this.precio = precio;
     }
 
@@ -48,5 +45,9 @@ public class Producto {
     public void actualizar(Producto producto) {
         this.nombre = producto.nombre;
         this.precio = producto.precio;
+    }
+
+    public int total(){
+        return precio * cantidad;
     }
 }
