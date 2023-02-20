@@ -73,16 +73,25 @@ public class Main {
             ctx.redirect("/comprar");
         });
 
+        /*Hace render al log-in direc determina a que vista será rediccionado luego de autentificarse correctamente*/
+        app.get("/autenti/<path>", ctx -> {
+            String direc = ctx.pathParam("path");
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("direc",direc);
+            ctx.render("/publico/autentificacion.vm",modelo);
+        });
+
         app.get("/comprar", ctx -> {
             ctx.redirect("/");
         });
 
+
         /*Carga la pestaña con todas las ventas realizadas
          * Si el usuario no se ha logeado entonces se redirige al log-in*/
-        app.get("/publico/ventas", ctx -> {
+        app.get("/ventas", ctx -> {
 
-            if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
-                ctx.redirect("/publico/ventas");
+           if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
+                ctx.redirect("/autenti/ventas");
                 return;
             }
             CarroCompra carrito = ctx.sessionAttribute("carrito");
@@ -94,14 +103,29 @@ public class Main {
             ctx.render("/publico/ventas.vm",modelo);
         });
 
-        //app.get("/autenti/ventas", ctx -> ctx.result("dsfsdfsdfsfd"));
 
+        /*Post de autentificacion
+         * redirige a la ventana especificada en el get*/
+        app.post("/autenti/{direc}",ctx -> {
+            String usuario = ctx.formParam("usuario");
+            String pass = ctx.formParam("password");
+            String temp = ctx.pathParam("direc");
+
+            if(usuario == null || pass == null){
+                ctx.redirect("/autenti/"+temp);
+            }
+            ctx.cookie("usuario", usuario);
+            ctx.cookie("password",pass);
+
+            ctx.redirect("/"+temp);
+
+        });
         /*Carga la ventana para hacer crud de los productos*/
         app.get("/productos", ctx -> {
-            if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
-                ctx.redirect("/publico/productos");
+            /*if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
+                ctx.redirect("/autenti/productos");
                 return;
-            }
+            }*/
             List<Producto> productos = service.getProductos();
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos",productos);
@@ -163,31 +187,7 @@ public class Main {
             ctx.redirect("/productos");
         });
 
-        /*Hace render al log-in
-         * direc determina a que vista será rediccionado luego de autentificarse correctamente*/
-        app.get("/autenti/:direc", ctx -> {
-            String direc = ctx.pathParam("direc");
-            Map<String, Object> modelo = new HashMap<>();
-            modelo.put("direc",direc);
-            ctx.render("/publico/autentificacion.vm",modelo);
-        });
 
-        /*Post de autentificacion
-         * redirige a la ventana especificada en el get*/
-        app.post("/autenti/:direc",ctx -> {
-            String usuario = ctx.formParam("usuario");
-            String pass = ctx.formParam("password");
-            String temp = ctx.pathParam("direc");
-
-            if(usuario == null || pass == null){
-                ctx.redirect("/autenti/"+temp);
-            }
-            ctx.cookie("usuario", usuario);
-            ctx.cookie("password",pass);
-
-            ctx.redirect("/"+temp);
-
-        });
 
         /*Carga el carrito pasando la lista de productos que se tiene dentro del carro*/
         app.get("/carrito", ctx -> {
