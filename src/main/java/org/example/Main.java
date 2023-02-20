@@ -86,6 +86,22 @@ public class Main {
             ctx.redirect("/comprar");
         });
 
+        /*Procesa la compra
+         * crea un objeto venta
+         * Limpia el carrito del usuario*/
+        app.post("/procesar",ctx -> {
+            CarroCompra carrito = ctx.sessionAttribute("carrito");
+            if(carrito.getProductos().size() < 1){
+                ctx.redirect("/carrito");
+            }
+            String nombre = ctx.formParam("nombre");
+            VentasProductos venta = new VentasProductos(service.getVentas().size()+1,nombre,carrito.productos);
+            service.addVentas(venta);
+            carrito.borrarProductos();
+            ctx.sessionAttribute("carrito",carrito);
+            ctx.redirect("/comprar");
+        });
+
         /*Hace render al log-in direc determina a que vista será rediccionado luego de autentificarse correctamente*/
         app.get("/autenti/<path>", ctx -> {
             String direc = ctx.pathParam("path");
@@ -134,11 +150,12 @@ public class Main {
 
         });
         /*Carga la ventana para hacer crud de los productos*/
+        //PENDIENTE
         app.get("/productos", ctx -> {
-            /*if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
+            if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
                 ctx.redirect("/autenti/productos");
                 return;
-            }*/
+            }
             List<Producto> productos = service.getProductos();
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos",productos);
@@ -199,7 +216,7 @@ public class Main {
 
             ctx.redirect("/productos");
         });
-        
+
 
         /*Elimina un producto del carrito a partir de su id*/
         app.get("/eliminar/:id", ctx -> {
