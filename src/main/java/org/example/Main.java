@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args){
 
         //Inicializacion del servidor
-        Javalin app = Javalin.create().start(5000);
+        Javalin app = Javalin.create().start(7000);
         //Instanciacion del motor de plantillas a utilizar
         JavalinRenderer.register(new JavalinVelocity(), ".vm");
         JavalinRenderer.register(new JavalinThymeleaf(), ".html");
@@ -79,10 +79,10 @@ public class Main {
 
         /*Carga la pestaña con todas las ventas realizadas
          * Si el usuario no se ha logeado entonces se redirige al log-in*/
-        app.get("/ventas", ctx -> {
+        app.get("/publico/ventas", ctx -> {
 
             if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
-                ctx.redirect("/autenti/ventas");
+                ctx.redirect("/publico/ventas");
                 return;
             }
             CarroCompra carrito = ctx.sessionAttribute("carrito");
@@ -94,12 +94,12 @@ public class Main {
             ctx.render("/publico/ventas.vm",modelo);
         });
 
-
+        //app.get("/autenti/ventas", ctx -> ctx.result("dsfsdfsdfsfd"));
 
         /*Carga la ventana para hacer crud de los productos*/
         app.get("/productos", ctx -> {
             if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
-                ctx.redirect("/autenti/productos");
+                ctx.redirect("/publico/productos");
                 return;
             }
             List<Producto> productos = service.getProductos();
