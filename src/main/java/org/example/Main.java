@@ -51,6 +51,19 @@ public class Main {
             ctx.render("/publico/listadoProductos.vm", modelo);
         });
 
+        /*Carga el carrito pasando la lista de productos que se tiene dentro del carro*/
+        app.get("/carrito", ctx -> {
+            CarroCompra carrito = ctx.sessionAttribute("carrito");
+            if(carrito == null){
+                carrito = new CarroCompra(service.getCarrito());
+            }
+            ctx.sessionAttribute("carrito",carrito);
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("productos",carrito.getProductos());
+            modelo.put("cantidad",carrito.getProductos().size());
+            ctx.render("/publico/carrito.vm",modelo);
+        });
+
         /*Peticion que agrega un producto al carrito del usuario
          * Si el producto ya está en el carrito entonces se aumenta la cantidad que se quiere*/
         app.post("/comprar", ctx -> {
@@ -90,7 +103,7 @@ public class Main {
          * Si el usuario no se ha logeado entonces se redirige al log-in*/
         app.get("/ventas", ctx -> {
 
-           if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
+            if( ctx.cookie("usuario") == null || ctx.cookie("password") == null || !ctx.cookie("usuario").equalsIgnoreCase("admin") || !ctx.cookie("password").equalsIgnoreCase("admin")) {
                 ctx.redirect("/autenti/ventas");
                 return;
             }
@@ -186,21 +199,8 @@ public class Main {
 
             ctx.redirect("/productos");
         });
+        
 
-
-
-        /*Carga el carrito pasando la lista de productos que se tiene dentro del carro*/
-        app.get("/carrito", ctx -> {
-            CarroCompra carrito = ctx.sessionAttribute("carrito");
-            if(carrito == null){
-                carrito = new CarroCompra(service.getCarrito());
-            }
-            ctx.sessionAttribute("carrito",carrito);
-            Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos",carrito.getProductos());
-            modelo.put("cantidad",carrito.getProductos().size());
-            ctx.render("/publico/carrito.vm",modelo);
-        });
         /*Elimina un producto del carrito a partir de su id*/
         app.get("/eliminar/:id", ctx -> {
             int id = Integer.parseInt(ctx.pathParam("id"));
