@@ -186,14 +186,14 @@ public class Main {
         });
 
         /*Remueve un articulo de los disponibles a partir de su id*/
-        app.get("/remover/:id", ctx -> {
+        app.get("/remover/{id}", ctx -> {
             service.eliminarProducto(Integer.parseInt(ctx.pathParam("id")));
             ctx.redirect("/productos");
         });
 
         /*Permite editar un producto ya agregado
          * Se envia un string para determinar que se realizará una modificación luego del post*/
-        app.get("/editar/:id", ctx -> {
+        app.get("/editar/{id}", ctx -> {
             Producto temp = service.getProductosPorID(Integer.parseInt(ctx.pathParam("id")));
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("producto",temp);
@@ -206,7 +206,7 @@ public class Main {
 
         /*Post luego del formulario de modificar producto
          * Actualiza los valores a partir de lo enviado en el formulario*/
-        app.post("/editar/:id", ctx -> {
+        app.post("/editar/{id}", ctx -> {
             String nombre = ctx.formParam("nombre");
             int precio = Integer.parseInt(ctx.formParam("precio"));
 
@@ -219,7 +219,7 @@ public class Main {
 
 
         /*Elimina un producto del carrito a partir de su id*/
-        app.get("/eliminar/:id", ctx -> {
+        app.get("/eliminar/{id}", ctx -> {
             int id = Integer.parseInt(ctx.pathParam("id"));
             CarroCompra carrito = ctx.sessionAttribute("carrito");
             carrito.eliminarProductoPorId(id);
@@ -231,7 +231,7 @@ public class Main {
         /*Procesa la compra
          * crea un objeto venta
          * Limpia el carrito del usuario*/
-        app.post("/procesar",ctx -> {
+        app.post("/procesar", ctx -> {
             CarroCompra carrito = ctx.sessionAttribute("carrito");
             if(carrito.getProductos().size() < 1){
                 ctx.redirect("/carrito");
@@ -254,3 +254,4 @@ public class Main {
     }
 
 }
+
