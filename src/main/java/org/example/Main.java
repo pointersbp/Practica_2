@@ -228,6 +228,14 @@ public class Main {
             ctx.redirect("/carrito");
         });
 
+        /*Limpia el carrito del usuario*/
+        app.get("/limpiar", ctx -> {
+            CarroCompra carrito = ctx.sessionAttribute("carrito");
+            carrito.borrarProductos();
+
+            ctx.redirect("/comprar");
+        });
+
         /*Procesa la compra
          * crea un objeto venta
          * Limpia el carrito del usuario*/
@@ -244,13 +252,6 @@ public class Main {
             ctx.redirect("/comprar");
         });
 
-        /*Limpia el carrito del usuario*/
-        app.get("/limpiar", ctx -> {
-            CarroCompra carrito = ctx.sessionAttribute("carrito");
-            carrito.borrarProductos();
-
-            ctx.redirect("/comprar");
-        });
     }
 
 }
